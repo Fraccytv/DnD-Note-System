@@ -1,22 +1,52 @@
 {% load static %}
-
+{% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <link rel="stylesheet" type="text/css" href="{%static 'app.css' %}">
-  <title>Document</title>
-</head>
-<body>
-  <header>
-  </header>
-  <main>
-    <div class="p">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos delectus molestias nesciunt, voluptatibus necessitatibus natus iure deserunt repellat quisquam id et dolorem iusto odit fugit quibusdam veniam ut, magnam laudantium?</div>
-  </main>
-  <footer>
-  </footer>
-  <script src="scripts.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'app.css' %}" />
+    <title>DND Note System</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="" class="link1">Dashboard</a>
+          </li>
+          <li>
+            <a href="" class="link2">Notes</a>
+          </li>
+          <li>
+            <a href="" class="link3">Members</a>
+          </li>
+          <li>
+            <a href="" class="link4">Login/Profil</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>Velkommen til D&D Notes</h1>
+      <div class="container-fluid text-center">
+        <div class="row">
+          <div class="col-3">
+            <button class="btn btn-primary">Opret Campaign</button>
+          </div><br><br>
+
+          <div class="row">
+            <div class="col-3">
+              Campaigns List:
+            </div>
+          </div>
+      </div>
+    </main>
+    <footer></footer>
+    {% bootstrap_javascript %}
+
+    {% comment %} <script src="scripts.js"></script> {% endcomment %}
+  </body>
 </html>
