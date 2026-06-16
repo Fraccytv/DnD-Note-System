@@ -1,0 +1,16 @@
+Jeg vil gerne dette.
+
+Lave en hjemmeside som skal breuges til vores D&D kampagne. Hjemmesiden skal indeholde følgende funktioner:
+
+1. Opret og redigere notes til kampagnen, såsom inventory, quests, og big events. disse notes skal være let tilgængelige for alle spillere og kunne redigeres af DM og den spiller som har oprettet noten.
+2. Hver note skal skal kunne categoriseres og tagges, så det er let at finde dem igen senere. For eksempel kan en note om en quest have tags som "quest", "main story", og "side quest".
+3. den skal kunne hentes APIes kald fra Foundry VTT.
+4. Jeg har ikke brug for at lave et helt campaign system ligesom foundry vtt. 
+5. jeg vil bare lave et simpelt system til at holde styr på vores kampagne, og det skal være let at bruge for både DM og spillere.
+6. Hjemmesiden skal have en brugervenlig grænseflade, der gør det nemt for både DM og spillere at navigere og finde de nødvendige oplysninger.
+7. Hjemmesiden skal være responsiv, så den fungerer godt på både desktop og mobile enheder.
+8. Hjemmesiden skal have en sikker login-funktion, så kun autoriserede brugere kan få adgang til kampagneinformationen.
+9. Hjemmesiden skal have en funktion til at dele kampagneinformation med spillere, såsom quests, inventory, og big events, så alle spillere kan holde sig opdateret på kampagnen.
+10. 
+
+Jeg vil gerne have vide om det skal laves i django eller javascript for at opfylde disse krav.
