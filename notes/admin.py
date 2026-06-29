@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import campaign
+from .models import Campaign
 
 # Register your models here.
 
 
-admin.site.register(campaign)
+admin.site.register(Campaign)

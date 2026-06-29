@@ -1,7 +1,12 @@
-from .models import campaign, note
+from .models import Campaign, Note
 from django import forms
 
-class campaignForm(forms.ModelForm):
+class CampaignForm(forms.ModelForm):
     class Meta:
-        model = campaign
+        model = Campaign
         fields = ['name', 'description']
+        
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = ['title', 'content']

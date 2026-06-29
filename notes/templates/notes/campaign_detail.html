@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block main %}
+  <div>
+    <p>
+      {{ campaign.name }} <br /> {{ campaign.description }}
+    </p>
+    <p>----------------------------------------------------------------------------------------------------------</p>
+
+    <span>Notes:</span>
+    {% for n in notes %}
+      <p>
+       Titel {{ n.title }}<br /> Content {{n.content}}
+        
+      </p>
+    {% endfor %}
+    {% comment %} {% for c in campaigns %}
+      <div>
+        <p>{{ c.id }} - {{ c.name }}</p>
+        <p>{{ c.name }} - {{ c.notes }}</p>
+      </div>
+    {% endfor %} {% endcomment %}
+    <a href="{% url 'make_note' campaign.id %}" class="btn btn-primary">opret note</a>
+  </div>
+{% endblock %}

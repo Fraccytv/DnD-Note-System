@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 
-class campaign(models.Model):
+class Campaign(models.Model):
     name = models.CharField(max_length=100)
     
     description = models.TextField()
@@ -13,13 +13,13 @@ class campaign(models.Model):
 
 
 
-class note(models.Model):
-    campaign = models.ForeignKey(campaign, on_delete=models.CASCADE, related_name='notes')
+class Note(models.Model):
+    campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE, related_name='notes')
     title = models.CharField(max_length=100)
     content = models.TextField()
-    created_by = models.ForeignKey("auth.User", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    # created_by = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
     VISIBILITY_CHOICES = [
         ('public', 'Public'),
         ('private', 'Private'),

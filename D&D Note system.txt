@@ -1,5 +1,3 @@
-Jeg vil gerne dette.
-
 Lave en hjemmeside som skal bruges til vores D&D kampagne. Hjemmesiden skal indeholde følgende funktioner:
 
 1. Opret og redigere notes til kampagnen, såsom inventory, quests, og big events. disse notes skal være let tilgængelige for alle spillere og kunne redigeres af DM og den spiller som har oprettet noten.
@@ -11,6 +9,3 @@ Lave en hjemmeside som skal bruges til vores D&D kampagne. Hjemmesiden skal inde
 7. Hjemmesiden skal være responsiv, så den fungerer godt på både desktop og mobile enheder.
 8. Hjemmesiden skal have en sikker login-funktion, så kun autoriserede brugere kan få adgang til kampagneinformationen.
 9. Hjemmesiden skal have en funktion til at dele kampagneinformation med spillere, såsom quests, inventory, og big events, så alle spillere kan holde sig opdateret på kampagnen.
-10. 
-
-Jeg vil gerne have vide om det skal laves i django eller javascript for at opfylde disse krav.

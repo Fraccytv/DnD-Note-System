@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block main %}
+  <h1>Velkommen til D&D Notes</h1>
+  <a href="{% url 'make_campaign' %}" class="btn btn-primary">Opret Campaign</a><br /><br />
+
+  Campaigns List:<br /><br />{% for c in campaigns %}
+    <a href="{% url 'campaign_detail' c.id %}">{{ c.id }} - {{ c.name }}<br /></a>
+  {% endfor %}
+{% endblock %}

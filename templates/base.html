@@ -15,7 +15,7 @@
       <nav>
         <ul>
           <li>
-            <a href="" class="link1">Dashboard</a>
+            <a href="/" class="link1">Dashboard</a>
           </li>
           <li>
             <a href="" class="link2">Notes</a>
@@ -30,25 +30,8 @@
       </nav>
     </header>
     <main>
-      <div class="container-fluid text-center">
-        <div class="row">
-          <div class="col-2">
-            <h1>Velkommen til D&D Notes</h1>
-            <a href="{% url 'make_campaign' %}" class="btn btn-primary">Opret Campaign</a><br /><br />
-          </div>
-          <div class="col-8"></div>
-          <div class="col-2"></div>
-        </div>
-        <div class="row">
-          <div class="col-2">
-            Campaigns List:<br /><br />{% for c in campaigns %}
-              <a href="{%url 'campaign_detail' c.id%}">{{ c.id }} - {{ c.name }}<br /></a>
-            {% endfor %}
-          </div>
-          <div class="col-8"></div>
-          <div class="col-2"></div>
-        </div>
-      </div>
+      {% block main%}
+      {% endblock %}
     </main>
     <footer></footer>
     {% bootstrap_javascript %}
