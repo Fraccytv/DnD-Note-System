@@ -7,4 +7,7 @@ urlpatterns = [
     path('make_campaign/', views.MakeCampaignView.as_view(), name='make_campaign'),
     path('campaign/<int:campaign_id>/', views.CampaignDetailView.as_view(), name='campaign_detail'),
     path('note/<int:campaign_id>/', views.MakeNoteView.as_view(), name='make_note'),
+    path('edit_note/<int:note_id>/', views.EditNoteView.as_view(), name='edit_note'),
+    path('delete_note/<int:note_id>/', views.DeleteNoteView.as_view(), name='delete_note'),
+    path('delete_campaign/<int:campaign_id>/', views.DeleteCampaignView.as_view(), name='delete_campaign'),
 ]

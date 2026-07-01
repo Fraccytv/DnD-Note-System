@@ -56,3 +56,41 @@ class MakeNoteView(View):
             note.campaign = campaign_obj
             note.save()
         return redirect("campaign_detail", campaign_id=campaign_id)
+    
+class EditNoteView(View):
+    def get(self, request, note_id):
+        note_obj = Note.objects.get(id=note_id)
+        form = NoteForm(instance=note_obj)
+        context = {
+            "form": form,
+            "note": note_obj,
+        }
+        return render(request, "notes/edit_note.html", context)
+
+    def post(self, request, note_id):
+        note_obj = Note.objects.get(id=note_id)
+        form = NoteForm(request.POST, instance=note_obj)
+        if form.is_valid():
+            form.save()
+            return redirect("note_detail", note_id=note_id)
+        else:
+            print("Form is not valid", form.errors)
+            context = {
+                "form": form,
+                "note": note_obj,
+            }
+            return render(request, "notes/edit_note.html", context)
+        
+class DeleteNoteView(View):
+    def post(self, request, note_id):
+        note_obj = Note.objects.get(id=note_id)
+        campaign_id = note_obj.campaign.id
+        note_obj.delete()
+        return redirect("campaign_detail", campaign_id=campaign_id)
+    
+class DeleteCampaignView(View):
+    def post(self, request, campaign_id):
+        campaign_obj = Campaign.objects.get(id=campaign_id)
+        campaign_obj.delete()
+        return redirect("home")
+    

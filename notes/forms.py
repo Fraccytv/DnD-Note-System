@@ -9,4 +9,4 @@ class CampaignForm(forms.ModelForm):
 class NoteForm(forms.ModelForm):
     class Meta:
         model = Note
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'visibility']
