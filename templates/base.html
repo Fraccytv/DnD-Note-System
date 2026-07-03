@@ -35,28 +35,24 @@
             </a>
           </li>
 
-          <li>
+          {% comment %} <li>
             <a href="{% url 'make_campaign' %}">
               <i class="bi bi-plus-circle"></i>
 
               New Campaign
             </a>
-          </li>
+          </li> {% endcomment %}
 
-          <li>
+          {% comment %} <li>
             <a href="#">
               <i class="bi bi-people"></i>
 
               Members
             </a>
-          </li>
+          </li> {% endcomment %}
 
           <li>
-            <a href="#">
-              <i class="bi bi-person-circle"></i>
-
-              Login
-            </a>
+            <a href="{% url 'login' %}"><i class="bi bi-person-circle"></i>Login</a>
           </li>
         </ul>
       </aside>

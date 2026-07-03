@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block main %}
+  <div class="container d-flex justify-content-center align-items-center" style="min-height:85vh;">
+    <div class="card bg-dark text-light shadow-lg border-0" style="max-width:450px; width:100%;">
+      <div class="card-body p-5">
+        <h2 class="text-center mb-2">D&D Note System</h2>
+        <p class="text-center text-secondary mb-4">Opret en ny konto</p>
+
+        {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Brugernavn</label>
+            <input type="text" name="username" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Adgangskode</label>
+            <input type="password" name="password" class="form-control" required />
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">Gentag adgangskode</label>
+            <input type="password" name="password_confirm" class="form-control" required />
+          </div>
+
+          <button class="btn btn-success w-100 mb-3">Opret konto</button>
+        </form>
+
+        <hr />
+
+        <p class="text-center mb-0">Har du allerede en konto?</p>
+
+        <div class="d-grid mt-3">
+          <a href="{% url 'login' %}" class="btn btn-outline-light">Log ind</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
