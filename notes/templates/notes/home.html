@@ -2,103 +2,124 @@
 
 {% block main %}
   <div class="container-fluid">
-    <!-- Page Header -->
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2 class="fw-bold mb-1">Dashboard</h2>
-
-        <p class="text-secondary mb-0">Manage your D&D campaigns and notes.</p>
-      </div>
-
-      <a href="{% url 'make_campaign' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-2"></i>
-
-        New Campaign
-      </a>
-    </div>
-
-    <!-- Stats -->
-    {% comment %}
-    <div class="row mb-4">
-      <div class="col-lg-4 mb-3">
-        <div class="card">
-          <div class="card-body">
-            <h6 class="text-secondary">Total Campaigns</h6>
-
-            <h2 class="fw-bold">{{ campaigns|length }}</h2>
-          </div>
+    {% if user.is_authenticated %}
+      <!-- Page Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="fw-bold mb-1">Dashboard</h2>
+          <p class="text-secondary mb-0">Manage your D&D campaigns and notes.</p>
         </div>
+
+        {% comment %} <a href="{% url 'make_campaign' %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-2"></i>
+          New Campaign
+        </a> {% endcomment %}
       </div>
 
-      <div class="col-lg-4 mb-3">
-        <div class="card">
-          <div class="card-body">
-            <h6 class="text-secondary">Total Notes</h6>
-
-            <h2 class="fw-bold">Coming Soon</h2>
-          </div>
+      <!-- Campaign List -->
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span>Campaigns</span>
         </div>
-      </div>
 
-      <div class="col-lg-4 mb-3">
-        <div class="card">
-          <div class="card-body">
-            <h6 class="text-secondary">Members</h6>
+        <div class="card-body">
+          {% if campaigns %}
+            <div class="row">
+              {% for c in campaigns %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <div class="card campaign-card h-100">
+                    <div class="card-body d-flex flex-column">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="campaign-title mb-0">{{ c.name }}</h5>
 
-            <h2 class="fw-bold">Coming Soon</h2>
-          </div>
-        </div>
-      </div>
-    </div> {% endcomment %}
+                        <form action="{% url 'delete_campaign' c.id %}" method="POST" class="m-0" onsubmit="return confirm('Are you sure?')">
+                          {% csrf_token %}
 
-    <!-- Campaign List -->
+                          <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash">Delete campaign</i></button>
+                        </form>
+                      </div>
 
-    <div class="card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Campaigns</span>
+                      <p class="campaign-description flex-grow-1">{{ c.description|truncatechars:120 }}</p>
 
-        {% comment %} <span class="badge bg-primary">{{ campaigns|length }}</span> {% endcomment %}
-      </div>
+                      <hr />
 
-      <div class="card-body">
-        {% if campaigns %}
-          <div class="row">
-            {% for c in campaigns %}
-              <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card campaign-card h-100">
-                  <div class="card-body d-flex flex-column">
-                    <!-- Header -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                      <h5 class="campaign-title mb-0">{{ c.name }}</h5>
-
-                      <form action="{% url 'delete_campaign' c.id %}" method="POST" class="m-0" onsubmit="return confirm('er du sikker?')">
-                        {% csrf_token %}
-
-                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash">Delete Campaign</i></button>
-                      </form>
+                      <a href="{% url 'campaign_detail' c.id %}" class="btn btn-outline-light w-100">Open Campaign</a>
                     </div>
-
-                    <!-- Description -->
-                    <p class="campaign-description flex-grow-1">{{ c.description|truncatechars:120 }}</p>
-
-                    <hr />
-
-                    <!-- Footer -->
-                    <a href="{% url 'campaign_detail' c.id %}" class="btn btn-outline-light w-100">Open Campaign</a>
                   </div>
                 </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <div class="text-center py-5">
-            <h4 class="mb-3">No campaigns yet</h4>
-            <p class="text-secondary">Create your first campaign to start writing notes.</p>
-            <a href="{% url 'make_campaign' %}" class="btn btn-primary">Create Campaign</a>
-          </div>
-        {% endif %}
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-5">
+              <h4 class="mb-3">No campaigns yet</h4>
+
+              <p class="text-secondary">Create your first campaign to start writing notes.</p>
+
+              <a href="{% url 'make_campaign' %}" class="btn btn-primary">Create Campaign</a>
+            </div>
+          {% endif %}
+        </div>
       </div>
-    </div>
+    {% else %}
+      <!-- Landing Page -->
+
+      <div class="py-5 text-center">
+        <h1 class="display-4 fw-bold mb-3">D&D Note System</h1>
+
+        <p class="lead text-secondary mb-5">Organize your Dungeons & Dragons campaigns, keep track of quests, NPCs, locations and important notes in one simple place.</p>
+
+        <div class="d-flex justify-content-center gap-3 mb-5">
+          <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-box-arrow-in-right me-2"></i>
+            Login
+          </a>
+
+          <a href="{% url 'register' %}" class="btn btn-outline-light btn-lg">
+            <i class="bi bi-person-plus me-2"></i>
+            Register
+          </a>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="bi bi-journal-richtext display-4 text-primary mb-3"></i>
+
+                <h4>Campaigns</h4>
+
+                <p class="text-secondary">Create and organize all of your campaigns.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="bi bi-stickies display-4 text-success mb-3"></i>
+
+                <h4>Notes</h4>
+
+                <p class="text-secondary">Save NPCs, quests, locations and adventure logs.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="bi bi-people display-4 text-warning mb-3"></i>
+
+                <h4>Sharing</h4>
+
+                <p class="text-secondary">Share notes with your players and collaborate together.</p>
+
+                <span class="badge bg-warning text-dark">Coming Soon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
   </div>
 {% endblock %}

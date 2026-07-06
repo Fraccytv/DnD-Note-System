@@ -57,7 +57,8 @@ class DeleteCampaignView(View):
 class MakeNoteView(View):
     def get(self, request, campaign_id):
         form = NoteForm()
-        context = {"form": form, "campaign_id": campaign_id}
+        campaign_obj = Campaign.objects.get(id=campaign_id)
+        context = {"form": form, "campaign_id": campaign_id, "campaign": campaign_obj}
         return render(request, "notes/make_notes.html", context)
 
     def post(self, request, campaign_id):
@@ -71,17 +72,20 @@ class MakeNoteView(View):
 
 
 class EditNoteView(View):
-    def get(self, request, note_id):
+    def get(self, request, note_id, campaign_id):
         note_obj = Note.objects.get(id=note_id)
         form = NoteForm(instance=note_obj)
+        campaign_obj = Campaign.objects.get(id=campaign_id)
         context = {
             "form": form,
             "note": note_obj,
+            "campaign": campaign_obj,
         }
         return render(request, "notes/edit_note.html", context)
 
-    def post(self, request, note_id):
+    def post(self, request, note_id, campaign_id):
         note_obj = Note.objects.get(id=note_id)
+        campaign_obj = Campaign.objects.get(id=campaign_id)
         form = NoteForm(request.POST, instance=note_obj)
         if form.is_valid():
             form.save()
@@ -91,6 +95,7 @@ class EditNoteView(View):
             context = {
                 "form": form,
                 "note": note_obj,
+                "campaign": campaign_obj,
             }
             return render(request, "notes/edit_note.html", context)
 
@@ -154,4 +159,4 @@ class LoginView(View):
 class LogoutView(View):
     def get(self, request):
         logout(request)
-        return redirect("login")
+        return redirect("home")
