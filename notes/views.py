@@ -1,114 +1,267 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .forms import CampaignForm, NoteForm
 from .models import Campaign, Note
 
-# Create your views here.
+# -----------------------
+# Home
+# -----------------------
 
 
-## Home page
 class MainView(View):
     def get(self, request):
-        campaigns = Campaign.objects.all()
-        return render(request, "notes/home.html", {"campaigns": campaigns})
+        if request.user.is_authenticated:
+            campaigns = Campaign.objects.filter(created_by=request.user)
+            members_campaigns = Campaign.objects.filter(members=request.user)
+        else:
+            campaigns = []
+            members_campaigns = []
+
+        context = {"campaigns": campaigns, "members_campaigns": members_campaigns}
+        return render(
+            request,
+            "notes/home.html",
+            context,
+        )
 
 
-## Campaign Views
-class MakeCampaignView(View):
+# -----------------------
+# Campaign Views
+# -----------------------
+
+
+class MakeCampaignView(LoginRequiredMixin, View):
     def get(self, request):
         form = CampaignForm()
-        context = {"form": form}
-        return render(request, "notes/make_campaign.html", context)
+        return render(
+            request,
+            "notes/make_campaign.html",
+            {"form": form},
+        )
 
     def post(self, request):
         form = CampaignForm(request.POST)
-        campaigns = Campaign.objects.all()
-        context = {"form": form, "campaigns": campaigns}
+
         if form.is_valid():
-            form.save()
-            return redirect("campaign_detail", campaign_id=form.instance.id)
-        else:
-            print("Form is not valid", form.errors)
+            campaign = form.save(commit=False)
+            campaign.created_by = request.user
+            campaign.save()
 
-        return render(request, "notes/home.html", context)
+            return redirect(
+                "campaign_detail",
+                campaign_id=campaign.id,
+            )
+
+        return render(
+            request,
+            "notes/make_campaign.html",
+            {"form": form},
+        )
 
 
-class CampaignDetailView(View):
+class CampaignDetailView(LoginRequiredMixin, View):
     def get(self, request, campaign_id):
-        campaign_obj = Campaign.objects.get(id=campaign_id)
-        notes = Note.objects.filter(campaign=campaign_obj)
-        context = {
-            "campaign": campaign_obj,
-            "notes": notes,
-        }
-        return render(request, "notes/campaign_detail.html", context)
+        campaign = get_object_or_404(
+            Campaign,
+            id=campaign_id,
+        )
+
+        is_dm = campaign.created_by == request.user
+        is_member = campaign.members.filter(id=request.user.id).exists()
+
+        if not (is_dm or is_member):
+            return redirect("home")
+
+        notes = Note.objects.filter(campaign=campaign)
+
+        return render(
+            request,
+            "notes/campaign_detail.html",
+            {
+                "campaign": campaign,
+                "notes": notes,
+                "is_dm": is_dm,
+                "is_member": is_member,
+            },
+        )
 
 
-class DeleteCampaignView(View):
+class DeleteCampaignView(LoginRequiredMixin, View):
     def post(self, request, campaign_id):
-        campaign_obj = Campaign.objects.get(id=campaign_id)
-        campaign_obj.delete()
+        campaign = get_object_or_404(
+            Campaign,
+            id=campaign_id,
+            created_by=request.user,
+        )
+
+        campaign.delete()
+
         return redirect("home")
 
 
-## Note Views
-class MakeNoteView(View):
+class AddMemberView(LoginRequiredMixin, View):
+    def post(self, request, campaign_id):
+        campaign = get_object_or_404(
+            Campaign,
+            id=campaign_id,
+            created_by=request.user,
+        )
+
+        username = request.POST.get("username")
+
+        try:
+            user_to_add = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return redirect("campaign_detail", campaign_id=campaign.id)
+
+        if user_to_add != request.user:
+            campaign.members.add(user_to_add)
+
+        return redirect(
+            "campaign_detail",
+            campaign_id=campaign.id,
+        )
+
+
+# -----------------------
+# Note Views
+# -----------------------
+
+
+class MakeNoteView(LoginRequiredMixin, View):
     def get(self, request, campaign_id):
+        campaign = get_object_or_404(
+            Campaign,
+            id=campaign_id,
+        )
+
         form = NoteForm()
-        campaign_obj = Campaign.objects.get(id=campaign_id)
-        context = {"form": form, "campaign_id": campaign_id, "campaign": campaign_obj}
-        return render(request, "notes/make_notes.html", context)
+
+        context = {
+            "form": form,
+            "campaign": campaign,
+            "campaign_id": campaign_id,
+        }
+
+        return render(
+            request,
+            "notes/make_notes.html",
+            context,
+        )
 
     def post(self, request, campaign_id):
-        campaign_obj = Campaign.objects.get(id=campaign_id)
+        campaign = get_object_or_404(
+            Campaign,
+            id=campaign_id,
+        )
+
+        is_dm = campaign.created_by == request.user
+        is_member = campaign.members.filter(id=request.user.id).exists()
+
+        if not (is_dm or is_member):
+            return redirect("home")
+        
         form = NoteForm(request.POST)
         if form.is_valid():
             note = form.save(commit=False)
-            note.campaign = campaign_obj
+            note.campaign = campaign
+
+            note.created_by = request.user
+
             note.save()
-        return redirect("campaign_detail", campaign_id=campaign_id)
+
+        return redirect(
+            "campaign_detail",
+            campaign_id=campaign_id,
+        )
 
 
-class EditNoteView(View):
+class EditNoteView(LoginRequiredMixin, View):
     def get(self, request, note_id, campaign_id):
-        note_obj = Note.objects.get(id=note_id)
-        form = NoteForm(instance=note_obj)
-        campaign_obj = Campaign.objects.get(id=campaign_id)
-        context = {
-            "form": form,
-            "note": note_obj,
-            "campaign": campaign_obj,
-        }
-        return render(request, "notes/edit_note.html", context)
+        note = get_object_or_404(
+            Note,
+            id=note_id,
+            created_by=request.user,
+        )
+
+        campaign = get_object_or_404(
+            Campaign,
+            id=campaign_id,
+            created_by=request.user,
+        )
+
+        form = NoteForm(instance=note)
+
+        return render(
+            request,
+            "notes/edit_note.html",
+            {
+                "form": form,
+                "note": note,
+                "campaign": campaign,
+            },
+        )
 
     def post(self, request, note_id, campaign_id):
-        note_obj = Note.objects.get(id=note_id)
-        campaign_obj = Campaign.objects.get(id=campaign_id)
-        form = NoteForm(request.POST, instance=note_obj)
+        note = get_object_or_404(
+            Note,
+            id=note_id,
+            created_by=request.user,
+        )
+
+        campaign = get_object_or_404(
+            Campaign,
+            id=campaign_id,
+            created_by=request.user,
+        )
+
+        form = NoteForm(request.POST, instance=note)
+
         if form.is_valid():
             form.save()
-            return redirect("campaign_detail", campaign_id=note_obj.campaign.id)
-        else:
-            print("Form is not valid", form.errors)
-            context = {
+
+            return redirect(
+                "campaign_detail",
+                campaign_id=campaign.id,
+            )
+
+        return render(
+            request,
+            "notes/edit_note.html",
+            {
                 "form": form,
-                "note": note_obj,
-                "campaign": campaign_obj,
-            }
-            return render(request, "notes/edit_note.html", context)
+                "note": note,
+                "campaign": campaign,
+            },
+        )
 
 
-class DeleteNoteView(View):
+class DeleteNoteView(LoginRequiredMixin, View):
     def post(self, request, note_id):
-        note_obj = Note.objects.get(id=note_id)
-        campaign_id = note_obj.campaign.id
-        note_obj.delete()
-        return redirect("campaign_detail", campaign_id=campaign_id)
+        note = get_object_or_404(
+            Note,
+            id=note_id,
+            created_by=request.user,
+        )
+
+        campaign_id = note.campaign.id
+        note.delete()
+
+        return redirect(
+            "campaign_detail",
+            campaign_id=campaign_id,
+        )
 
 
-## Login / Logout / Register Views
+# -----------------------
+# Authentication
+# -----------------------
+
+
 class RegisterView(View):
     def get(self, request):
         return render(request, "registration/register.html")
@@ -132,8 +285,11 @@ class RegisterView(View):
                 {"error": "Username already exists."},
             )
 
-        user = User.objects.create_user(username=username, password=password)
-        user.save()
+        User.objects.create_user(
+            username=username,
+            password=password,
+        )
+
         return redirect("login")
 
 
@@ -144,16 +300,21 @@ class LoginView(View):
     def post(self, request):
         username = request.POST.get("username")
         password = request.POST.get("password")
-        user = authenticate(username=username, password=password)
+
+        user = authenticate(
+            username=username,
+            password=password,
+        )
+
         if user is not None:
             login(request, user)
             return redirect("home")
-        else:
-            return render(
-                request,
-                "registration/login.html",
-                {"error": "Invalid credentials."},
-            )
+
+        return render(
+            request,
+            "registration/login.html",
+            {"error": "Invalid credentials."},
+        )
 
 
 class LogoutView(View):

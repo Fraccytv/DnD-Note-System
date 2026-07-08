@@ -16,6 +16,12 @@ urlpatterns = [
         views.DeleteCampaignView.as_view(),
         name="delete_campaign",
     ),
+    ## add members to campaign
+    path(
+        "add_member/<int:campaign_id>/",
+        views.AddMemberView.as_view(),
+        name="add_member",
+    ),
     ## Make note / Edit note pages / delete note
     path("note/<int:campaign_id>/", views.MakeNoteView.as_view(), name="make_note"),
     path("edit_note/<int:note_id>/", views.EditNoteView.as_view(), name="edit_note"),
