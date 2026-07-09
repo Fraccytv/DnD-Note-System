@@ -144,9 +144,9 @@ ul {
     box-shadow: var(--shadow);
     margin-bottom: 25px;
 
-    hr {
-        border-color: #374151;
-        margin: 20px 0;
+    hr{
+        border-color:#374151;
+        margin:20px 0;
     }
 }
 
@@ -157,14 +157,6 @@ ul {
     letter-spacing: .3px;
     padding: 18px 22px;
     color: var(--text-muted);
-}
-
-.card-header .form-control {
-    max-width: 350px;
-}
-
-.card-header .btn-group {
-    white-space: nowrap;
 }
 
 .card-body {
@@ -234,20 +226,6 @@ ul {
     margin-bottom: 0;
 }
 
-
-
-/* ==========================================================
-   SEARCH BAR
-========================================================== */
-
-.search-input {
-    width: 250px;
-}
-
-.search-input:focus {
-    width: 350px;
-    transition: .2s;
-}
 
 /* ==========================================================
    FORMS
@@ -370,141 +348,4 @@ select:focus {
         padding: 20px;
     }
 
-}
-
-/* ==========================================================
-   CAMPAIGN DETAIL REDESIGN
-========================================================== */
-
-.user-folder {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    margin-bottom: 18px;
-    overflow: hidden;
-    transition: .25s;
-}
-
-.user-folder:hover {
-    box-shadow: var(--shadow);
-}
-
-.user-folder summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 18px 22px;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user-folder summary::-webkit-details-marker {
-    display: none;
-}
-
-.user-folder summary:hover {
-    background: var(--surface-light);
-}
-
-.user-folder[open] summary {
-    border-bottom: 1px solid var(--border);
-}
-
-.user-folder-content {
-    padding: 18px;
-}
-
-.note-item {
-    background: var(--surface-light);
-    border-left: 4px solid var(--primary);
-    border-radius: 12px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    transition: .2s;
-}
-
-.note-item:hover {
-    transform: translateY(-2px);
-}
-
-/* .note-item summary{
-    list-style:none;
-    cursor:pointer;
-    padding:16px 18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    font-weight:600;
-    color:var(--text);
-} */
-
-
-.note-item summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 18px;
-}
-
-.note-summary-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.note-summary-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.note-title {
-    font-weight: 600;
-}
-
-.note-item summary::-webkit-details-marker {
-    display: none;
-}
-
-.note-item summary:hover {
-    background: rgba(255, 255, 255, .04);
-}
-
-.note-content {
-    padding: 20px;
-    color: #d1d5db;
-    border-top: 1px solid var(--border);
-}
-
-.note-content p {
-    margin-bottom: 1rem;
-}
-
-.note-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid var(--border);
-    padding-top: 16px;
-    margin-top: 16px;
-}
-
-.member-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .05);
-}
-
-.member-card:last-child {
-    border-bottom: none;
-}
-
-.member-role {
-    color: var(--text-muted);
-    font-size: .85rem;
 }

@@ -7,6 +7,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CampaignForm, NoteForm
 from .models import Campaign, Note
 
+from django.db.models import Q
+
+# -----------------------
+# Helpers
+# -----------------------
+
+
+def user_has_campaign_access(campaign, user):
+    is_dm = campaign.created_by == user
+    is_member = campaign.members.filter(id=user.id).exists()
+
+    return is_dm or is_member
+
+
 # -----------------------
 # Home
 # -----------------------
@@ -37,6 +51,7 @@ class MainView(View):
 class MakeCampaignView(LoginRequiredMixin, View):
     def get(self, request):
         form = CampaignForm()
+
         return render(
             request,
             "notes/make_campaign.html",
@@ -70,13 +85,26 @@ class CampaignDetailView(LoginRequiredMixin, View):
             id=campaign_id,
         )
 
-        is_dm = campaign.created_by == request.user
-        is_member = campaign.members.filter(id=request.user.id).exists()
-
-        if not (is_dm or is_member):
+        if not user_has_campaign_access(campaign, request.user):
             return redirect("home")
 
         notes = Note.objects.filter(campaign=campaign)
+
+        search = request.GET.get("search".strip())
+        sort = request.GET.get("sort")
+
+        if search:
+            notes = notes.filter(
+                Q(title__icontains=search) | Q(content__icontains=search)
+            )
+
+        if sort == "oldest":
+            notes = notes.order_by("created_at")
+        else:
+            notes = notes.order_by("-created_at")
+
+        users = [campaign.created_by]
+        users.extend(campaign.members.all())
 
         return render(
             request,
@@ -84,8 +112,9 @@ class CampaignDetailView(LoginRequiredMixin, View):
             {
                 "campaign": campaign,
                 "notes": notes,
-                "is_dm": is_dm,
-                "is_member": is_member,
+                "users": users,
+                "is_dm": campaign.created_by == request.user,
+                "is_member": campaign.members.filter(id=request.user.id).exists(),
             },
         )
 
@@ -116,9 +145,12 @@ class AddMemberView(LoginRequiredMixin, View):
         try:
             user_to_add = User.objects.get(username=username)
         except User.DoesNotExist:
-            return redirect("campaign_detail", campaign_id=campaign.id)
+            return redirect(
+                "campaign_detail",
+                campaign_id=campaign.id,
+            )
 
-        if user_to_add != request.user:
+        if user_to_add != campaign.created_by:
             campaign.members.add(user_to_add)
 
         return redirect(
@@ -139,18 +171,19 @@ class MakeNoteView(LoginRequiredMixin, View):
             id=campaign_id,
         )
 
-        form = NoteForm()
+        if not user_has_campaign_access(campaign, request.user):
+            return redirect("home")
 
-        context = {
-            "form": form,
-            "campaign": campaign,
-            "campaign_id": campaign_id,
-        }
+        form = NoteForm()
 
         return render(
             request,
             "notes/make_notes.html",
-            context,
+            {
+                "form": form,
+                "campaign": campaign,
+                "campaign_id": campaign_id,
+            },
         )
 
     def post(self, request, campaign_id):
@@ -159,40 +192,32 @@ class MakeNoteView(LoginRequiredMixin, View):
             id=campaign_id,
         )
 
-        is_dm = campaign.created_by == request.user
-        is_member = campaign.members.filter(id=request.user.id).exists()
-
-        if not (is_dm or is_member):
+        if not user_has_campaign_access(campaign, request.user):
             return redirect("home")
-        
+
         form = NoteForm(request.POST)
+
         if form.is_valid():
             note = form.save(commit=False)
             note.campaign = campaign
-
             note.created_by = request.user
-
             note.save()
 
         return redirect(
             "campaign_detail",
-            campaign_id=campaign_id,
+            campaign_id=campaign.id,
         )
 
 
 class EditNoteView(LoginRequiredMixin, View):
-    def get(self, request, note_id, campaign_id):
+    def get(self, request, note_id):
         note = get_object_or_404(
             Note,
             id=note_id,
             created_by=request.user,
         )
 
-        campaign = get_object_or_404(
-            Campaign,
-            id=campaign_id,
-            created_by=request.user,
-        )
+        campaign = note.campaign
 
         form = NoteForm(instance=note)
 
@@ -206,20 +231,19 @@ class EditNoteView(LoginRequiredMixin, View):
             },
         )
 
-    def post(self, request, note_id, campaign_id):
+    def post(self, request, note_id):
         note = get_object_or_404(
             Note,
             id=note_id,
             created_by=request.user,
         )
 
-        campaign = get_object_or_404(
-            Campaign,
-            id=campaign_id,
-            created_by=request.user,
-        )
+        campaign = note.campaign
 
-        form = NoteForm(request.POST, instance=note)
+        form = NoteForm(
+            request.POST,
+            instance=note,
+        )
 
         if form.is_valid():
             form.save()
@@ -245,10 +269,17 @@ class DeleteNoteView(LoginRequiredMixin, View):
         note = get_object_or_404(
             Note,
             id=note_id,
-            created_by=request.user,
         )
 
         campaign_id = note.campaign.id
+        campaign = note.campaign
+
+        is_dm = campaign.created_by == request.user
+        is_note_owner = note.created_by == request.user
+
+        if not (is_dm or is_note_owner):
+            return redirect("home")
+
         note.delete()
 
         return redirect(

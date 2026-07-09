@@ -2,130 +2,150 @@
 
 {% block main %}
   <div class="container-fluid">
-    <!-- Header -->
-
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h2 class="fw-bold mb-1">{{ campaign.name }}</h2>
-
         <p class="text-secondary mb-0">Campaign Overview</p>
       </div>
 
-      <div>
-        <a href="{% url 'home' %}" class="btn btn-outline-light me-2">
-          <i class="bi bi-arrow-left"></i>
-
-          Dashboard
-        </a>
-      </div>
+      <a href="{% url 'home' %}" class="btn btn-outline-light">Dashboard</a>
     </div>
 
+    <!-- CAMPAIGN INFORMATION -->
     <div class="row mb-4">
-      <!-- Campaign information -->
-      <div class="col-lg-6">
-        <div class="card mb-4">
+      <div class="col-lg-5">
+        <div class="card h-100">
           <div class="card-header">Campaign Information</div>
 
           <div class="card-body">
-            <h4 class="mb-3">{{ campaign.name }}</h4>
-
+            <h4>{{ campaign.name }}</h4>
             <p class="text-secondary">{{ campaign.description }}</p>
           </div>
         </div>
       </div>
+
       <!-- MEMBERS -->
-      <div class="col-lg-6 mb-3">
+      <div class="col-lg-7">
         <div class="card h-100">
-          <div class="card-header">
-            <strong>Members</strong>
-          </div>
+          <div class="card-header">Members</div>
 
           <div class="card-body">
-            <div class="mb-3">
-              <div class="fw-bold text-secondary">
-                {{ campaign.created_by }} <span class="text-secondary">(DM)</span>
+            <div class="member-card">
+              <div class="text-secondary">
+                <span class="member-role"><strong>Dungeon Master</strong></span><br />
+                {{ campaign.created_by.username }}
               </div>
             </div>
 
-            {% if campaign.members.all %}
-              {% for member in campaign.members.all %}
-                <div class="mb-2 text-secondary">{{ member.username }} - Player</div>
-              {% empty %}
-                <p class="text-secondary">No members yet.</p>
-              {% endfor %}
-            {% endif %}
+            {% for member in campaign.members.all %}
+              <div class="member-card">
+                <div class="text-secondary">
+                  <span class="member-role"><strong>Player</strong></span><br />
+                  {{ member.username }}
+                </div>
+              </div>
+            {% empty %}
+              <p class="text-secondary mt-3">No members yet.</p>
+            {% endfor %}
 
-            <hr />
+            {% if is_dm %}
+              <hr />
 
-            <form method="POST" action="{% url 'add_member' campaign.id %}">
-              {% csrf_token %}
+              <form method="POST" action="{% url 'add_member' campaign.id %}">
+                {% csrf_token %}
 
-              <div class="mb-2">
                 <label class="form-label">Username</label>
 
-                <input type="text" name="username" class="form-control" placeholder="Enter username" />
-              </div>
+                <input type="text" class="form-control mb-3" name="username" placeholder="Enter username" />
 
-              <button class="btn btn-primary w-100">Add Member</button>
-            </form>
+                <button class="btn btn-primary w-100">Add Member</button>
+              </form>
+            {% endif %}
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <!-- Notes -->
 
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Notes</span>
+    <!-- NOTES -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-3">Notes</h5>
+        <div class="d-flex gap-2 align-items-center">
+          <form method="GET" class="flex-grow-1">
+            <input type="hidden" name="sort" value="{{ request.GET.sort }}" />
+            <input type="text" name="search" class="form-control search-input" placeholder="search notes" value="{{ request.GET.search }}" />
+          </form>
 
-            {% comment %} <span class="badge bg-primary">{{ notes|length }}</span> {% endcomment %}
+          <div class="btn-group" role="group">
+            <a href="?search={{ request.GET.search }}&sort=latest" class="btn btn-outline-light btn-sm {% if request.GET.sort != 'oldest' %}active{% endif %}">Latest</a>
+            <a href="?search={{ request.GET.search }}&sort=oldest" class="btn btn-outline-light btn-sm {% if request.GET.sort == 'oldest' %}active{% endif %}">Oldest</a>
           </div>
-
-          <div class="card-body">
-            {% if notes %}
-              {% for n in notes %}
-                <div class="note mb-4">
-                  <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">{{ n.title }}</h5>
-                    <span class="badge bg-secondary">{{ n.visibility }}</span>
-                  </div>
-
-                  <p>{{ n.content|linebreaks }}</p>
-
-                  <hr />
-
-                  <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-secondary">User: {{ n.created_by }} - {{ n.created_at }}</small>
-
-                    <div>
-                      <a href="{% url 'edit_note' n.id %}" class="btn btn-sm btn-outline-warning">
-                        <i class="bi bi-pencil"></i>
-
-                        Edit
-                      </a>
-                      <form action="{% url 'delete_note' n.id %}" method="POST" class="m-0">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger bi bi-trash mt-2">Delete</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              {% endfor %}
-            {% else %}
-              <div class="text-center py-5">
-                <i class="bi bi-journal-text display-1"></i>
-
-                <h4 class="mt-3">No Notes Yet</h4>
-
-                <p class="text-secondary">Start writing notes for this campaign.</p>
-
-                <a href="{% url 'make_note' campaign.id %}" class="btn btn-primary">Create First Note</a>
-              </div>
-            {% endif %}
-          </div>
+          <a href="{% url 'make_note' campaign.id %}" class="btn btn-primary btn-sm">New Note</a>
         </div>
+      </div>
+
+      <!-- NOTES CARD -->
+      <div class="card-body">
+        {% if notes %}
+          {% for user in users %}
+            <details class="user-folder">
+              <summary>
+                {% if user == campaign.created_by %}
+                  {{ user.username }} <span class="member-role">(DM)</span>
+                {% else %}
+                  {{ user.username }}
+                {% endif %}
+              </summary>
+
+              <div class="user-folder-content">
+                {% for n in notes %}
+                  {% if n.created_by == user %}
+                    <details class="note-item">
+                      <summary>
+                        <div class="note-summary-left">
+                          <span class="note-title">{{ n.title }}</span>
+                        </div>
+
+                        <div class="note-summary-right">
+                          <small class="text-secondary">{{ n.created_at|date:'d M Y - H:i' }}</small>
+
+                          <span class="badge bg-secondary">{{ n.visibility }}</span>
+                        </div>
+                      </summary>
+
+                      <div class="note-content">
+                        <p>{{ n.content|linebreaks }}</p>
+
+                        <div class="note-footer">
+                          <div>
+                            {% if request.user == n.created_by %}
+                              <a href="{% url 'edit_note' n.id %}" class="btn btn-sm btn-outline-warning me-2">Edit</a>
+                            {% endif %}
+
+                            {% if request.user == n.created_by or request.user == campaign.created_by %}
+                              <form action="{% url 'delete_note' n.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                              </form>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </details>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </details>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-5">
+            <h4>No Notes Yet</h4>
+
+            <p class="text-secondary">Start writing notes for this campaign.</p>
+
+            <a href="{% url 'make_note' campaign.id %}" class="btn btn-primary">Create First Note</a>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
