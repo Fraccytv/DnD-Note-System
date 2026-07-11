@@ -1,0 +1,22 @@
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media(max-width:992px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+}
+
+

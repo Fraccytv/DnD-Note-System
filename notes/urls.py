@@ -32,4 +32,10 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("register/", views.RegisterView.as_view(), name="register"),
+    ## Remove member from campaign
+    path(
+        "remove_member/<int:member_id>/",
+        views.RemoveMemberView.as_view(),
+        name="remove_member",
+    ),
 ]

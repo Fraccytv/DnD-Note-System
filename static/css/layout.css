@@ -1,0 +1,86 @@
+/* ==========================================================
+   LAYOUT
+========================================================== */
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1;
+    padding: 35px;
+    overflow: auto;
+}
+
+
+/* ==========================================================
+   SIDEBAR
+========================================================== */
+
+.sidebar {
+    width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar-header {
+    padding: 30px 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.sidebar-menu {
+    margin-top: 20px;
+}
+
+.sidebar-menu li {
+    margin: 6px 15px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    color: #cbd5e1;
+    border-radius: var(--radius);
+    transition: .2s;
+}
+
+.sidebar-menu a:hover {
+    background: var(--surface-light);
+    color: white;
+}
+
+.sidebar-menu i {
+    font-size: 1.1rem;
+}
+
+
+/* ==========================================================
+   NAVBAR
+========================================================== */
+
+.navbar {
+    background: var(--surface) !important;
+    border: 1px solid var(--border);
+    padding: 18px 25px;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: 600;
+}
+
+

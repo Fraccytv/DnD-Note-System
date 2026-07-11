@@ -1,0 +1,49 @@
+/* ==========================================================
+   THEME
+========================================================== */
+
+:root {
+    --bg: #111827;
+    --surface: #1f2937;
+    --surface-light: #374151;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --text: #f8fafc;
+    --text-muted: #9ca3af;
+    --border: #374151;
+    --radius: 12px;
+    --shadow: 0 10px 25px rgba(0, 0, 0, .25);
+}
+
+
+/* ==========================================================
+   GLOBAL
+========================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.text-secondary {
+    color: var(--text-muted) !important;
+}
+
+

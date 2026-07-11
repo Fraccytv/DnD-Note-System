@@ -3,6 +3,9 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+
+import notes
 
 from .forms import CampaignForm, NoteForm
 from .models import Campaign, Note
@@ -36,11 +39,7 @@ class MainView(View):
             members_campaigns = []
 
         context = {"campaigns": campaigns, "members_campaigns": members_campaigns}
-        return render(
-            request,
-            "notes/home.html",
-            context,
-        )
+        return render(request, "notes/home.html", context)
 
 
 # -----------------------
@@ -84,11 +83,20 @@ class CampaignDetailView(LoginRequiredMixin, View):
             Campaign,
             id=campaign_id,
         )
+        is_dm = campaign.created_by == request.user
+        is_member = campaign.members.filter(id=request.user.id).exists()
 
         if not user_has_campaign_access(campaign, request.user):
             return redirect("home")
 
-        notes = Note.objects.filter(campaign=campaign)
+        if is_dm:
+            notes = Note.objects.filter(campaign=campaign)
+        elif is_member:
+            notes = Note.objects.filter(
+                Q(campaign=campaign)
+                & Q(created_by=request.user)
+                | Q(visibility="public")
+            )
 
         search = request.GET.get("search".strip())
         sort = request.GET.get("sort")
@@ -103,8 +111,14 @@ class CampaignDetailView(LoginRequiredMixin, View):
         else:
             notes = notes.order_by("-created_at")
 
-        users = [campaign.created_by]
-        users.extend(campaign.members.all())
+        users = []
+
+        for user in [campaign.created_by, *campaign.members.all()]:
+            if notes.filter(created_by=user).exists():
+                users.append(user)
+
+        # users = [campaign.created_by]
+        # users.extend(campaign.members.all())
 
         return render(
             request,
@@ -113,8 +127,8 @@ class CampaignDetailView(LoginRequiredMixin, View):
                 "campaign": campaign,
                 "notes": notes,
                 "users": users,
-                "is_dm": campaign.created_by == request.user,
-                "is_member": campaign.members.filter(id=request.user.id).exists(),
+                "is_dm": is_dm,
+                "is_member": is_member,
             },
         )
 
@@ -132,6 +146,11 @@ class DeleteCampaignView(LoginRequiredMixin, View):
         return redirect("home")
 
 
+# -----------------------
+# Add Members View
+# -----------------------
+
+
 class AddMemberView(LoginRequiredMixin, View):
     def post(self, request, campaign_id):
         campaign = get_object_or_404(
@@ -145,13 +164,46 @@ class AddMemberView(LoginRequiredMixin, View):
         try:
             user_to_add = User.objects.get(username=username)
         except User.DoesNotExist:
+            messages.error(request, f"User with username '{username}' does not exist.")
             return redirect(
                 "campaign_detail",
                 campaign_id=campaign.id,
             )
 
-        if user_to_add != campaign.created_by:
+        if (
+            user_to_add != campaign.created_by
+            and not campaign.members.filter(id=user_to_add.id).exists()
+        ):
             campaign.members.add(user_to_add)
+
+        messages.success(request, f"User '{username}' has been added to the campaign.")
+
+        return redirect(
+            "campaign_detail",
+            campaign_id=campaign.id,
+        )
+
+
+# -----------------------
+# Remove Members View
+# -----------------------
+
+
+class RemoveMemberView(LoginRequiredMixin, View):
+    def post(self, request, member_id):
+        member_to_remove = get_object_or_404(User, id=member_id)
+        campaign = get_object_or_404(
+            Campaign,
+            created_by=request.user,
+            members=member_to_remove,
+        )
+
+        campaign.members.remove(member_to_remove)
+
+        messages.success(
+            request,
+            f"Member '{member_to_remove.username}' has been removed from the campaign.",
+        )
 
         return redirect(
             "campaign_detail",

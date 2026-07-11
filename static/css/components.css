@@ -1,0 +1,148 @@
+/* ==========================================================
+   CARDS
+========================================================== */
+
+.card {
+    background: var(--surface);
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    margin-bottom: 25px;
+
+    hr {
+        border-color: #374151;
+        margin: 20px 0;
+    }
+}
+
+.card-header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    letter-spacing: .3px;
+    padding: 18px 22px;
+    color: var(--text-muted);
+}
+
+.card-header .form-control {
+    max-width: 350px;
+}
+
+.card-header .btn-group {
+    white-space: nowrap;
+}
+
+.card-body {
+    padding: 25px;
+
+    h4,
+    h5,
+    h6 {
+        color: var(--text-muted);
+    }
+
+}
+
+
+/* ==========================================================
+   BUTTONS
+========================================================== */
+
+.btn-primary {
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-outline-light,
+.btn-sm {
+    border-radius: 10px;
+}
+
+
+/* ==========================================================
+   FORMS
+========================================================== */
+
+form {
+    /* background: var(--surface);
+    padding: 35px;
+    border-radius: 15px;
+    box-shadow: var(--shadow); */
+    margin: 0;
+}
+
+form p {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+form label {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 12px;
+    color: white !important;
+    background: var(--surface-light) !important;
+    border: 1px solid #4b5563 !important;
+    border-radius: 10px !important;
+}
+
+textarea {
+    min-height: 180px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: none !important;
+}
+
+
+/* ==========================================================
+   TABLES
+========================================================== */
+
+.table {
+    color: white;
+}
+
+.table thead {
+    background: var(--bg);
+}
+
+.table td,
+.table th {
+    border-color: var(--border);
+}
+
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+.badge {
+    font-size: .75rem;
+    border-radius: 999px;
+    padding: 8px 12px;
+}
+
+.display-1 {
+    color: #4b5563;
+}
+
+

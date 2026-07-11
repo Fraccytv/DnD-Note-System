@@ -35,7 +35,12 @@
 - [x] Display campaign members
 - [x] Display Dungeon Master separately
 - [x] Show member campaigns on dashboard
-
+- [x] Prevent duplicate members
+- [x] Prevent adding campaign owner
+- [x] Display useful error when username doesn't exist
+- [x] Remove members
+- [x] Remove member confirmation modal
+---
 ---
 
 ## Notes
@@ -65,24 +70,14 @@
 
 ---
 
-# Current Tasks
-
-## Campaign Members
-
-- [ ] Prevent duplicate members
-- [ ] Prevent adding campaign owner
-- [ ] Display useful error when username doesn't exist
-- [ ] Remove members
-
----
-
 ## Note Permissions
 
-- [ ] Allow campaign members to create notes
-- [ ] Allow campaign members to edit only their own notes
-- [ ] Allow campaign members to view notes
+- [x] Allow campaign members to create notes
+- [x] Allow campaign members to edit only their own notes
+- [x] Allow campaign members to view notes
 
 ---
+# Current Tasks
 
 ## Note Visibility
 
@@ -102,7 +97,7 @@
 ## Search & Filtering
 
 - [ ] Search campaign names
-- [ ] Search note content
+- [x] Search note content
 - [ ] Filter by visibility
 - [ ] Filter by creator
 - [ ] Filter by creation date
@@ -111,7 +106,7 @@
 
 ## User Experience
 
-- [ ] Django messages framework
+- [x] Django messages framework
 - [ ] Empty search result message
 - [ ] User profile page
 - [ ] Dashboard statistics

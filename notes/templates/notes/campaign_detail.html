@@ -38,11 +38,15 @@
             </div>
 
             {% for member in campaign.members.all %}
-              <div class="member-card">
+              <div class="member-card justify-content-between">
                 <div class="text-secondary">
                   <span class="member-role"><strong>Player</strong></span><br />
                   {{ member.username }}
                 </div>
+
+                {% if is_dm %}
+                  <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#removeMemberModal" data-member-id="{{ member.id }}" data-member-name="{{ member.username }}">Remove</button>
+                {% endif %}
               </div>
             {% empty %}
               <p class="text-secondary mt-3">No members yet.</p>
@@ -146,6 +150,32 @@
             <a href="{% url 'make_note' campaign.id %}" class="btn btn-primary">Create First Note</a>
           </div>
         {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="removeMemberModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content remove-member-modal">
+        <div class="modal-body text-center">
+          <div class="remove-icon">
+            <i class="bi bi-exclamation-circle"></i>
+          </div>
+
+          <h3 id="removeMemberTitle">Remove Member?</h3>
+
+          <p id="removeMemberText" class="text-secondary">Are you sure you want to remove this member?</p>
+
+          <form id="removeMemberForm" method="POST" data-url-template="{% url 'remove_member' 0 %}">
+            {% csrf_token %}
+
+            <div class="d-flex gap-3 mt-4">
+              <button type="button" class="btn btn-outline-light flex-fill" data-bs-dismiss="modal">Cancel</button>
+
+              <button type="submit" class="btn btn-danger flex-fill">Remove</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
