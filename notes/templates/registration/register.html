@@ -5,7 +5,7 @@
     <div class="card bg-dark text-light shadow-lg border-0" style="max-width:450px; width:100%;">
       <div class="card-body p-5">
         <h2 class="text-center mb-2">D&D Note System</h2>
-        <p class="text-center text-secondary mb-4">Opret en ny konto</p>
+        <p class="text-center text-secondary mb-4">Make an new account</p>
 
         {% if error %}
           <div class="alert alert-danger">{{ error }}</div>
@@ -15,29 +15,29 @@
           {% csrf_token %}
 
           <div class="mb-3">
-            <label class="form-label">Brugernavn</label>
+            <label class="form-label">Username</label>
             <input type="text" name="username" class="form-control" required />
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Adgangskode</label>
+            <label class="form-label">Password</label>
             <input type="password" name="password" class="form-control" required />
           </div>
 
           <div class="mb-4">
-            <label class="form-label">Gentag adgangskode</label>
+            <label class="form-label">Confirm Password</label>
             <input type="password" name="password_confirm" class="form-control" required />
           </div>
 
-          <button class="btn btn-success w-100 mb-3">Opret konto</button>
+          <button class="btn btn-success w-100 mb-3">Create Account</button>
         </form>
 
         <hr />
 
-        <p class="text-center mb-0">Har du allerede en konto?</p>
+        <p class="text-center mb-0">Do you already have an account?</p>
 
         <div class="d-grid mt-3">
-          <a href="{% url 'login' %}" class="btn btn-outline-light">Log ind</a>
+          <a href="{% url 'login' %}" class="btn btn-outline-light">Login</a>
         </div>
       </div>
     </div>

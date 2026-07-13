@@ -145,4 +145,20 @@ select:focus {
     color: #4b5563;
 }
 
+/* ==========================================================
+   EMPTY STATES
+========================================================== */
 
+.empty-state {
+    text-align: center;
+    padding: 4rem 1rem;
+}
+
+.empty-state h4 {
+    margin-bottom: .75rem;
+}
+
+.empty-state p {
+    color: var(--text-muted);
+    margin-bottom: 0;
+}

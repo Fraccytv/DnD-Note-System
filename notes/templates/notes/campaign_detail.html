@@ -55,7 +55,7 @@
             {% if is_dm %}
               <hr />
 
-              <form method="POST" action="{% url 'add_member' campaign.id %}">
+              <form method="POST" action="{% url 'add_member' campaign.slug %}">
                 {% csrf_token %}
 
                 <label class="form-label">Username</label>
@@ -84,7 +84,7 @@
             <a href="?search={{ request.GET.search }}&sort=latest" class="btn btn-outline-light btn-sm {% if request.GET.sort != 'oldest' %}active{% endif %}">Latest</a>
             <a href="?search={{ request.GET.search }}&sort=oldest" class="btn btn-outline-light btn-sm {% if request.GET.sort == 'oldest' %}active{% endif %}">Oldest</a>
           </div>
-          <a href="{% url 'make_note' campaign.id %}" class="btn btn-primary btn-sm">New Note</a>
+          <a href="{% url 'make_note' campaign.slug %}" class="btn btn-primary btn-sm">New Note</a>
         </div>
       </div>
 
@@ -92,7 +92,7 @@
       <div class="card-body">
         {% if notes %}
           {% for user in users %}
-            <details class="user-folder">
+            <details class="user-folder" id="user-{{ user.id }}">
               <summary>
                 {% if user == campaign.created_by %}
                   {{ user.username }} <span class="member-role">(DM)</span>
@@ -142,12 +142,12 @@
             </details>
           {% endfor %}
         {% else %}
-          <div class="text-center py-5">
+          <div class="empty-state">
             <h4>No Notes Yet</h4>
 
             <p class="text-secondary">Start writing notes for this campaign.</p>
 
-            <a href="{% url 'make_note' campaign.id %}" class="btn btn-primary">Create First Note</a>
+            <a href="{% url 'make_note' campaign.slug %}" class="btn btn-primary">Create First Note</a>
           </div>
         {% endif %}
       </div>

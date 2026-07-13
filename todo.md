@@ -40,7 +40,7 @@
 - [x] Display useful error when username doesn't exist
 - [x] Remove members
 - [x] Remove member confirmation modal
----
+
 ---
 
 ## Notes
@@ -52,7 +52,7 @@
 - [x] View notes
 - [x] Automatically assign `created_by`
 - [x] Sort notes (Latest / Oldest)
-- [x] Search notes by title
+- [x] Search notes by title and content
 - [x] Keep search and sorting combined
 - [x] Display creation date in note header
 
@@ -65,6 +65,7 @@
 - [x] Context-aware navigation
 - [x] Dashboard split into owned/member campaigns
 - [x] Collapsible note folders per user
+- [x] Show only users with visible notes
 - [x] Modern note cards
 - [x] Notes toolbar (Search + Sort + New Note)
 
@@ -77,52 +78,36 @@
 - [x] Allow campaign members to view notes
 
 ---
-# Current Tasks
 
 ## Note Visibility
 
-- [ ] Private notes visible to:
-    - [ ] Note owner
-    - [ ] Dungeon Master
+- [x] Private notes visible to:
+    - [x] Note owner
+    - [x] Dungeon Master
 
-- [ ] Public notes visible to:
-    - [ ] Campaign members
-
-- [ ] Filter notes by visibility
+- [x] Public notes visible to:
+    - [x] Campaign members
 
 ---
 
-# Future Improvements
 
 ## Search & Filtering
 
-- [ ] Search campaign names
-- [x] Search note content
-- [ ] Filter by visibility
-- [ ] Filter by creator
-- [ ] Filter by creation date
+- [x] Search campaign names
+- [x] Search descriptions and Dungeon Master
 
 ---
 
 ## User Experience
 
 - [x] Django messages framework
-- [ ] Empty search result message
-- [ ] User profile page
-- [ ] Dashboard statistics
+- [x] Remember expanded note folders after page reload
+- [x] Empty search result message
 
 ---
+
+# Current Tasks
 
 ## Notes
-
-- [ ] Categories
-- [ ] Tags
-- [ ] Rich text editor
-- [ ] File attachments
-
----
-
-## Campaigns
-
-- [ ] Invite users
-- [ ] Multiple Dungeon Masters
+- [ ] Markdown support
+- [ ] Markdown preview

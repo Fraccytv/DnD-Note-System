@@ -1,38 +1,42 @@
 # Wishlist
 
+---
+
 ## Campaigns
 
-* [ ] Campaign banner/icon
-* [ ] Archive campaigns
-* [ ] Duplicate campaigns
+- [ ] Campaign banner/icon
+- [ ] Archive campaigns
+- [ ] Duplicate campaigns
+- [ ] Invite users
+- [ ] Multiple Dungeon Masters
 
 ---
 
 ## Notes
 
-* [ ] Search notes
-* [ ] Pin important notes
-* [ ] Favorite notes
-* [ ] Markdown support
+- [ ] Categories
+- [ ] Tags
+- [ ] Pin important notes
+- [ ] Favorite notes
+- [ ] Markdown support
 
 ---
 
 ## Members
 
-* [ ] Username autocomplete
-* [ ] Remove members
-* [ ] Member profile picture
+- [ ] Username autocomplete
+- [ ] Member profile picture
 
 ---
 
 ## Quality of Life
 
-* [ ] Success/error messages
-* [ ] Dark mode
-* [ ] Recently edited notes
+- [ ] Dashboard statistics
+- [ ] Dark mode
+- [ ] Recently edited notes
 
 ---
 
 ## Integrations
 
-* [ ] Foundry VTT integration
+- [ ] Foundry VTT integration

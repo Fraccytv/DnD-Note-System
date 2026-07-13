@@ -45,7 +45,9 @@
                       </div>
 
                       <p class="campaign-description flex-grow-1">{{ c.description|truncatechars:120 }}</p>
+
                       <hr />
+
                       <a href="{% url 'campaign_detail' c.slug %}" class="btn btn-outline-light w-100">Open Campaign</a>
                     </div>
                   </div>
@@ -77,52 +79,37 @@
       <!-- ========================= -->
       <!-- Member Campaigns -->
       <!-- ========================= -->
-      {% if members_campaigns or has_any_member %}
+      {% if members_campaigns %}
         <div class="card">
           <div class="card-header">
             <span>Campaigns You're a Member Of</span>
           </div>
 
           <div class="card-body">
-            {% if members_campaigns %}
-              <div class="row">
-                {% for c in members_campaigns %}
-                  <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card campaign-card h-100">
-                      <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                          <h5 class="campaign-title mb-0">{{ c.name }}</h5>
+            <div class="row">
+              {% for c in members_campaigns %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                  <div class="card campaign-card h-100">
+                    <div class="card-body d-flex flex-column">
+                      <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="campaign-title mb-0">{{ c.name }}</h5>
 
-                          <span class="badge bg-secondary">Member</span>
-                        </div>
-
-                        <p class="campaign-description flex-grow-1">{{ c.description|truncatechars:120 }}</p>
-
-                        <hr />
-
-                        <small class="text-secondary mb-3">DM: {{ c.created_by }}</small>
-
-                        <a href="{% url 'campaign_detail' c.slug %}" class="btn btn-outline-light w-100">Open Campaign</a>
+                        <span class="badge bg-secondary">Member</span>
                       </div>
+
+                      <p class="campaign-description flex-grow-1">{{ c.description|truncatechars:120 }}</p>
+
+                      <hr />
+
+                      <small class="text-secondary mb-3">DM: {{ c.created_by }}</small>
+
+                      <a href="{% url 'campaign_detail' c.slug %}" class="btn btn-outline-light w-100">Open Campaign</a>
                     </div>
                   </div>
-                {% endfor %}
-              </div>
-            {% elif request.GET.search %}
-              <div class="empty-state">
-                <h4 class="mb-3">No matches found</h4>
-                <p class="text-secondary mb-0">None of the campaigns you've joined match "{{ request.GET.search }}".</p>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      {% elif not request.GET.search %}
-        <div class="card">
-          <div class="card-header">
-            <span>Campaigns You're a Member Of</span>
-          </div>
-
-          <div class="card-body">
+                </div>
+              {% endfor %}
+            </div>
+            {% else %}
             <div class="empty-state">
               <h4 class="mb-3">No joined campaigns</h4>
 

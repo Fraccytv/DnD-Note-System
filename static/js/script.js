@@ -20,3 +20,18 @@ removeMemberModal.addEventListener("show.bs.modal", function (event) {
     form.action = urlTemplate.replace("0", memberId);
 
 });
+
+const userFolders = document.querySelectorAll(".user-folder");
+
+// Gendan tidligere åbne foldere
+userFolders.forEach((folder) => {
+    const isOpen = sessionStorage.getItem(folder.id);
+
+    if (isOpen === "true") {
+        folder.open = true;
+    }
+
+    folder.addEventListener("toggle", () => {
+        sessionStorage.setItem(folder.id, folder.open);
+    });
+});

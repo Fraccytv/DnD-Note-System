@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-qu-@y=!e@p5nb3nc^2c)mdg=ykj%n9d)+ryv-==mr*y-9v0#q^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["dnd-notes.duckdns.org", "localhost", "127.0.0.1"]
 
 
 # Application definition

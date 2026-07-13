@@ -5,8 +5,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-import notes
-
 from .forms import CampaignForm, NoteForm
 from .models import Campaign, Note
 
@@ -31,14 +29,47 @@ def user_has_campaign_access(campaign, user):
 
 class MainView(View):
     def get(self, request):
-        if request.user.is_authenticated:
-            campaigns = Campaign.objects.filter(created_by=request.user)
-            members_campaigns = Campaign.objects.filter(members=request.user)
-        else:
-            campaigns = []
-            members_campaigns = []
+        if not request.user.is_authenticated:
+            return render(
+                request,
+                "notes/home.html",
+                {
+                    "campaigns": [],
+                    "members_campaigns": [],
+                    "search": "",
+                },
+            )
 
-        context = {"campaigns": campaigns, "members_campaigns": members_campaigns}
+        search = request.GET.get("search", "").strip()
+
+        base_owned = Campaign.objects.filter(created_by=request.user)
+        base_member = Campaign.objects.filter(members=request.user)
+
+        has_any_owned = base_owned.exists()
+        has_any_member = base_member.exists()
+
+        if search:
+            campaigns = base_owned.filter(
+                Q(name__icontains=search)
+                | Q(description__icontains=search)
+                | Q(created_by__username__icontains=search)
+            )
+            members_campaigns = base_member.filter(
+                Q(name__icontains=search)
+                | Q(description__icontains=search)
+                | Q(created_by__username__icontains=search)
+            )
+        else:
+            campaigns = base_owned
+            members_campaigns = base_member
+
+        context = {
+            "campaigns": campaigns,
+            "members_campaigns": members_campaigns,
+            "search": search,
+            "has_any_owned": has_any_owned,
+            "has_any_member": has_any_member,
+        }
         return render(request, "notes/home.html", context)
 
 
@@ -67,7 +98,7 @@ class MakeCampaignView(LoginRequiredMixin, View):
 
             return redirect(
                 "campaign_detail",
-                campaign_id=campaign.id,
+                slug=campaign.slug,
             )
 
         return render(
@@ -78,10 +109,10 @@ class MakeCampaignView(LoginRequiredMixin, View):
 
 
 class CampaignDetailView(LoginRequiredMixin, View):
-    def get(self, request, campaign_id):
+    def get(self, request, slug):
         campaign = get_object_or_404(
             Campaign,
-            id=campaign_id,
+            slug=slug,
         )
         is_dm = campaign.created_by == request.user
         is_member = campaign.members.filter(id=request.user.id).exists()
@@ -92,10 +123,8 @@ class CampaignDetailView(LoginRequiredMixin, View):
         if is_dm:
             notes = Note.objects.filter(campaign=campaign)
         elif is_member:
-            notes = Note.objects.filter(
-                Q(campaign=campaign)
-                & Q(created_by=request.user)
-                | Q(visibility="public")
+            notes = Note.objects.filter(campaign=campaign).filter(
+                Q(created_by=request.user) | Q(visibility="public")
             )
 
         search = request.GET.get("search".strip())
@@ -134,10 +163,10 @@ class CampaignDetailView(LoginRequiredMixin, View):
 
 
 class DeleteCampaignView(LoginRequiredMixin, View):
-    def post(self, request, campaign_id):
+    def post(self, request, slug):
         campaign = get_object_or_404(
             Campaign,
-            id=campaign_id,
+            slug=slug,
             created_by=request.user,
         )
 
@@ -145,17 +174,16 @@ class DeleteCampaignView(LoginRequiredMixin, View):
 
         return redirect("home")
 
-
 # -----------------------
 # Add Members View
 # -----------------------
 
 
 class AddMemberView(LoginRequiredMixin, View):
-    def post(self, request, campaign_id):
+    def post(self, request, slug):
         campaign = get_object_or_404(
             Campaign,
-            id=campaign_id,
+            slug=slug,
             created_by=request.user,
         )
 
@@ -167,7 +195,7 @@ class AddMemberView(LoginRequiredMixin, View):
             messages.error(request, f"User with username '{username}' does not exist.")
             return redirect(
                 "campaign_detail",
-                campaign_id=campaign.id,
+                slug=campaign.slug,
             )
 
         if (
@@ -180,7 +208,7 @@ class AddMemberView(LoginRequiredMixin, View):
 
         return redirect(
             "campaign_detail",
-            campaign_id=campaign.id,
+            slug=campaign.slug,
         )
 
 
@@ -207,7 +235,7 @@ class RemoveMemberView(LoginRequiredMixin, View):
 
         return redirect(
             "campaign_detail",
-            campaign_id=campaign.id,
+            slug=campaign.slug,
         )
 
 
@@ -217,10 +245,10 @@ class RemoveMemberView(LoginRequiredMixin, View):
 
 
 class MakeNoteView(LoginRequiredMixin, View):
-    def get(self, request, campaign_id):
+    def get(self, request, slug):
         campaign = get_object_or_404(
             Campaign,
-            id=campaign_id,
+            slug=slug,
         )
 
         if not user_has_campaign_access(campaign, request.user):
@@ -234,14 +262,14 @@ class MakeNoteView(LoginRequiredMixin, View):
             {
                 "form": form,
                 "campaign": campaign,
-                "campaign_id": campaign_id,
+                "slug": campaign.slug,
             },
         )
 
-    def post(self, request, campaign_id):
+    def post(self, request, slug):
         campaign = get_object_or_404(
             Campaign,
-            id=campaign_id,
+            slug=slug,
         )
 
         if not user_has_campaign_access(campaign, request.user):
@@ -257,7 +285,7 @@ class MakeNoteView(LoginRequiredMixin, View):
 
         return redirect(
             "campaign_detail",
-            campaign_id=campaign.id,
+            slug=campaign.slug,
         )
 
 
@@ -302,7 +330,7 @@ class EditNoteView(LoginRequiredMixin, View):
 
             return redirect(
                 "campaign_detail",
-                campaign_id=campaign.id,
+                slug=campaign.slug,
             )
 
         return render(
@@ -323,7 +351,6 @@ class DeleteNoteView(LoginRequiredMixin, View):
             id=note_id,
         )
 
-        campaign_id = note.campaign.id
         campaign = note.campaign
 
         is_dm = campaign.created_by == request.user
@@ -336,7 +363,7 @@ class DeleteNoteView(LoginRequiredMixin, View):
 
         return redirect(
             "campaign_detail",
-            campaign_id=campaign_id,
+            slug=campaign.slug,
         )
 
 
