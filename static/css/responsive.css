@@ -281,6 +281,15 @@
         font-size: 1.9rem;
     }
 
+    .sidebar {
+        display: none;
+    }
+
+    .content {
+        margin: 0;
+        width: 100%;
+    }
+
     .content {
         padding: 12px;
     }
