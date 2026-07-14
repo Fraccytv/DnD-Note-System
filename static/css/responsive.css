@@ -131,16 +131,16 @@
 
     /* Sidebar  */
 
-    .sidebar {
+    /* .sidebar {
         display: none;
     }
 
     .content {
         margin: 0;
         width: 100%;
-    }
+    } */
 
-    /* .sidebar {
+    .sidebar {
         padding: 15px;
     }
 
@@ -158,7 +158,7 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-    } */
+    }
 
     /* Campaign cards */
 
