@@ -224,4 +224,31 @@
     background:#bb2d3b;
 }
 
+/* ==========================================================
+   DASHBOARD
+========================================================== */
+
+.dashboard-search {
+    width: 100%;
+}
+
+.dashboard-search .search-input {
+    max-width: 420px;
+}
+
+
+/* ==========================================================
+   NOTES TOOLBAR
+========================================================== */
+
+.notes-toolbar {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.notes-search {
+    flex: 1;
+    min-width: 280px;
+}
 

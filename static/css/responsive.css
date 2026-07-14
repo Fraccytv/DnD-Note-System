@@ -2,7 +2,18 @@
    RESPONSIVE
 ========================================================== */
 
-@media(max-width:992px) {
+
+/* ---------- Tablet ---------- */
+
+@media (max-width:992px) {
+
+    .display-4 {
+        font-size: 2.8rem;
+    }
+
+    /* Layout */
+
+
     .wrapper {
         flex-direction: column;
     }
@@ -11,12 +22,280 @@
         width: 100%;
         height: auto;
         position: relative;
+        padding: 20px 0;
+    }
+
+    .sidebar-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-menu li {
+        list-style: none;
+    }
+
+    .sidebar-menu a {
+        white-space: nowrap;
     }
 
     .content {
         padding: 20px;
     }
 
+    /* Search */
+
+    .search-input,
+    .search-input:focus {
+        width: 100%;
+    }
+
+    /* Dashboard */
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .dashboard-header .btn {
+        width: 100%;
+    }
+
+    .dashboard-search .search-input {
+        max-width: 100%;
+    }
+
+    /* Notes */
+
+    .note-summary-right {
+        gap: 10px;
+    }
+
+    .notes-toolbar {
+        width: 100%;
+    }
+
+    .notes-search {
+        width: 100%;
+    }
+
+    .notes-search .search-input {
+        width: 100%;
+    }
+
 }
 
 
+/* ---------- Mobile ---------- */
+
+@media (max-width:768px) {
+
+    .display-4 {
+        font-size: 2.2rem;
+    }
+
+    .lead {
+        font-size: 1rem;
+    }
+
+    .py-5 .d-flex.justify-content-center {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .py-5 .d-flex.justify-content-center .btn {
+        width: 100%;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    /* Dashboard */
+
+    .dashboard-header h2 {
+        font-size: 1.7rem;
+    }
+
+    .dashboard-header .btn {
+        width: 100%;
+    }
+
+    /* Sidebar  */
+
+    .sidebar {
+        padding: 15px;
+    }
+
+    .sidebar-menu {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sidebar-menu li {
+        width: 100%;
+    }
+
+    .sidebar-menu a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* Campaign cards */
+
+    .campaign-card .card-body {
+        padding: 18px;
+    }
+
+    .campaign-card .d-flex:first-child {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 15px;
+    }
+
+    .campaign-card form {
+        width: 100%;
+    }
+
+    .campaign-card form button {
+        width: 100%;
+    }
+
+    /* Search */
+
+    .search-input,
+    .search-input:focus {
+        width: 100%;
+    }
+
+    /* Members */
+
+    .member-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .member-card button {
+        width: 100%;
+    }
+
+    /* User folders */
+
+    .user-folder summary {
+        padding: 16px;
+        font-size: 1rem;
+    }
+
+    /* Notes */
+
+    .note-item summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .note-summary-left,
+    .note-summary-right {
+        width: 100%;
+    }
+
+    .note-summary-right {
+        justify-content: space-between;
+    }
+
+    .note-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .note-footer .btn,
+    .note-footer form,
+    .note-footer form button {
+        width: 100%;
+    }
+
+    /* Notes toolbar */
+
+    .notes-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .notes-search {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .notes-search .search-input {
+        width: 100%;
+    }
+
+    .notes-toolbar .btn-group {
+        width: 100%;
+    }
+
+    .notes-toolbar .btn-group .btn {
+        flex: 1;
+    }
+
+    .notes-toolbar .btn-primary {
+        width: 100%;
+    }
+
+    /* Modal */
+
+    .remove-member-modal .modal-body {
+        padding: 25px;
+    }
+
+}
+
+
+/* ---------- Small phones ---------- */
+
+@media (max-width:576px) {
+
+    .display-4 {
+        font-size: 1.9rem;
+    }
+
+    .content {
+        padding: 12px;
+    }
+
+    .campaign-title {
+        font-size: 1rem;
+    }
+
+    .campaign-description {
+        font-size: .95rem;
+    }
+
+    .user-folder summary {
+        padding: 14px;
+    }
+
+    .note-content {
+        padding: 16px;
+    }
+
+    .remove-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 1.6rem;
+    }
+
+}
